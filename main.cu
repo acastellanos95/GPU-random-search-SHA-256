@@ -434,6 +434,7 @@ int main() {
   const unsigned int threadsPerBlock = 16;
   const unsigned int blockCount = 15000;
   const unsigned int totalThreads = threadsPerBlock * blockCount;
+  const uint32_t number_of_trailing_zeroes = 7;
 
   std::ifstream seeds("seeds.dat");
   unsigned long long int seed;
@@ -457,7 +458,7 @@ int main() {
     cudaMemcpy(m_device, m_host, totalThreads * 2 * sizeof(uint32_t), cudaMemcpyHostToDevice);
     cudaMemcpy(found_device, found_host, totalThreads * sizeof(bool), cudaMemcpyHostToDevice);
     SHA_256_64<<<blockCount, threadsPerBlock>>>(devStates, hash_device, m_device);
-    found<<<blockCount, threadsPerBlock>>>(hash_device, found_device, 6);
+    found<<<blockCount, threadsPerBlock>>>(hash_device, found_device, number_of_trailing_zeroes);
     cudaDeviceSynchronize();
     cudaMemcpy(hash_host, hash_device, totalThreads * 8 * sizeof(uint32_t), cudaMemcpyDeviceToHost);
     cudaMemcpy(found_host, found_device, totalThreads * sizeof(bool), cudaMemcpyDeviceToHost);

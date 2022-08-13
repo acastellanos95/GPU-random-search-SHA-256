@@ -1,0 +1,1 @@
+nvcc -o CUDA-SHA-256 ../main.cu
